@@ -46,6 +46,16 @@
     .loading {
       color: #2196F3;
     }
+    .note {
+      background-color: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 5px;
+      padding: 15px;
+      margin: 20px auto;
+      max-width: 400px;
+      font-size: 14px;
+      color: #856404;
+    }
     
     /* تنسيق الجدول للطباعة */
     .print-table {
@@ -106,6 +116,14 @@
       }
       #result {
         display: none;
+      }
+      .note {
+        background-color: #fff3cd !important;
+        border: 1px solid #ffeaa7 !important;
+        color: #856404 !important;
+        padding: 15px !important;
+        margin: 20px auto !important;
+        font-size: 14px !important;
       }
     }
   </style>
@@ -206,6 +224,9 @@
           <div class="result-item total">المجموع النهائي لأعمال التقويم المستمر: ${student.total}</div>
           <div class="result-item final">امتحان نهاية الفصل: ${student.final}</div>
           <div class="result-item grandTotal">المجموع الكلي: ${grandTotal}</div>
+          <div class="note">
+            <strong>ملاحظة:</strong> عبارة "غير متوفر" تعني أن الطالب لم يُقيم إلى الآن في هذه المهارة
+          </div>
         `;
         printBtn.style.display = "inline-block";
       } else {
@@ -278,6 +299,9 @@
             </tr>
           </tbody>
         </table>
+        <div class="note" style="background-color: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; margin: 20px 0; font-size: 14px; border-radius: 5px;">
+          <strong>ملاحظة:</strong> عبارة "غير متوفر" تعني أن الطالب لم يُقيم إلى الآن في هذه المهارة
+        </div>
         <div class="teacher-signature">
           <div style="text-align:left; margin-top:50px;">
             <div>التوقيع: ________________</div>
@@ -298,4 +322,3 @@
   </script>
 </body>
 </html>
-
