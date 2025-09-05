@@ -2,33 +2,37 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>نتائج الطلاب</title>
   <style>
     body {
       font-family: Tahoma, Arial;
       text-align: center;
-      margin-top: 50px;
+      margin-top: 30px;
       direction: rtl;
+      padding: 10px;
     }
     input, button {
-      padding: 10px;
+      padding: 12px;
       font-size: 16px;
       margin: 5px;
+      width: 90%;
+      max-width: 300px;
     }
     #result {
       margin-top: 20px;
-      font-size: 18px;
-      line-height: 1.8;
+      font-size: 16px;
+      line-height: 1.6;
     }
     .result-item {
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 5px;
+      margin: 8px 0;
+      padding: 12px;
+      border-radius: 8px;
       background-color: #f0f8ff;
-      display: inline-block;
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
+      width: 95%;
+      max-width: 90%;
+      margin: 10px auto;
+      font-size: 15px;
     }
     .oral { color: #FF9800; }
     .homework { color: #2196F3; }
@@ -52,7 +56,7 @@
       border-radius: 5px;
       padding: 15px;
       margin: 20px auto;
-      max-width: 400px;
+      max-width: 90%;
       font-size: 14px;
       color: #856404;
     }
@@ -90,6 +94,40 @@
       font-weight: bold;
       color: #333;
       margin-top: 10px;
+    }
+    
+    /* Media Query للشاشات الصغيرة */
+    @media screen and (max-width: 600px) {
+      body {
+        margin-top: 20px;
+        padding: 5px;
+      }
+      
+      input, button {
+        width: 95%;
+        font-size: 16px;
+        padding: 14px;
+        margin: 8px 0;
+      }
+      
+      h2 {
+        font-size: 20px;
+        padding: 0 10px;
+      }
+      
+      .result-item {
+        font-size: 14px;
+        padding: 10px;
+        width: 95%;
+      }
+      
+      .print-table {
+        font-size: 14px;
+      }
+      
+      .print-table th, .print-table td {
+        padding: 8px 5px;
+      }
     }
     
     @media print {
