@@ -1,65 +1,508 @@
-// إنشاء جدول النتائج بترتيب جديد
-let tableHTML = `
-  <table class="results-table">
-    <tr>
-      <th>نوع التقييم</th>
-      <th>الدرجة الكاملة</th>
-      <th>درجة الطالب</th>
-    </tr>
-    <tr>
-      <td>العرض الشفوي</td>
-      <td>10</td>
-      <td>${student.oral || 'غير متوفر'}</td>
-    </tr>
-    <tr>
-      <td>الواجب المنزلي</td>
-      <td>5</td>
-      <td>${student.homework || 'غير متوفر'}</td>
-    </tr>
-    <tr>
-      <td>التسميع</td>
-      <td>5</td>
-      <td>${student.listening || 'غير متوفر'}</td>
-    </tr>
-    <tr>
-      <td>الاختبار القصير الأول</td>
-      <td>15</td>
-      <td>${student.exam1 || 'غير متوفر'}</td>
-    </tr>
-    <tr>
-      <td>الاختبار القصير الثاني</td>
-      <td>15</td>
-      <td>${student.exam2 || 'غير متوفر'}</td>
-    </tr>
-    <tr>
-      <td>التعبير الكتابي</td>
-      <td>10</td>
-      <td>${student.writing || 'غير متوفر'}</td>
-    </tr>
-    <tr class="max-score">
-      <td>مجموع أعمال الطلاب</td>
-      <td>60</td>
-      <td>${student.total}</td>
-    </tr>
-    <tr class="final-row">
-      <td>درجة الاختبار النهائي</td>
-      <td>40</td>
-      <td>${student.final}</td>
-    </tr>
-    <tr class="grand-total-row">
-      <td>المجموع الكلي</td>
-      <td>100</td>
-      <td>${grandTotal}</td>
-    </tr>
-    <tr class="level-row">
-      <td>مستوى الطالب</td>
-      <td colspan="2">${level}</td>
-    </tr>
-  </table>
-  <div class="note">
-    <strong>ملاحظة:</strong> عبارة "غير متوفر" تعني أن الطالب لم يُقيم إلى الآن في هذه المهارة
-  </div>
-  <div style="text-align: left; margin-top: 15px; font-weight: bold; color: #333;">
-    الأستاذ خليل البلوشي
-  </div>
-`;
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نتائج الطلاب</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Baloo Bhaijaan 2', Tahoma, Arial, sans-serif;
+      text-align: center;
+      margin-top: 30px;
+      direction: rtl;
+      padding: 10px;
+      background-color: #f5f7fa;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+    input, button {
+      padding: 12px;
+      font-family: 'Baloo Bhaijaan 2', Tahoma, Arial, sans-serif;
+      font-size: 18px;
+      margin: 5px;
+      width: 90%;
+      max-width: 300px;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+    
+    /* تنسيق الجدول النتائج */
+    .results-table {
+      width: 95%;
+      max-width: 700px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      font-family: 'Baloo Bhaijaan 2', Tahoma, Arial, sans-serif;
+      font-size: 18px;
+    }
+    .results-table th {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .results-table td {
+      padding: 12px 15px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+    .results-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .results-table tr:hover {
+      background-color: #f1f8e9;
+    }
+    .results-table .max-score {
+      background-color: #fff8e1 !important;
+      font-weight: bold;
+      color: #5d4037;
+    }
+    .results-table .total-row {
+      background-color: #e8f5e9 !important;
+      font-weight: bold;
+    }
+    .results-table .final-row {
+      background-color: #e3f2fd !important;
+      font-weight: bold;
+    }
+    .results-table .grand-total-row {
+      background-color: #f3e5f5 !important;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .results-table .level-row {
+      background-color: #fce4ec !important;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .result-item, .error, .loading {
+      margin: 10px auto;
+      padding: 15px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      font-family: 'Baloo Bhaijaan 2', Tahoma, Arial, sans-serif;
+    }
+    .error {
+      color: #f44336;
+      background-color: #ffebee;
+      border: 1px solid #ffcdd2;
+    }
+    .loading {
+      color: #2196F3;
+      background-color: #e3f2fd;
+    }
+    .note {
+      background-color: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 5px;
+      padding: 15px;
+      margin: 20px auto;
+      max-width: 90%;
+      font-size: 16px;
+      color: #856404;
+    }
+    
+    /* تنسيق الجدول للطباعة */
+    .print-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px auto;
+      font-size: 18px;
+      direction: rtl;
+      font-family: 'Baloo Bhaijaan 2', Tahoma, Arial, sans-serif;
+    }
+    .print-table th, .print-table td {
+      border: 1px solid #333;
+      padding: 12px;
+      text-align: center;
+    }
+    .print-table th {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .print-table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    
+    /* توقيع الاستاذ */
+    .teacher-signature {
+      text-align: left;
+      margin-top: 30px;
+      padding: 20px;
+      border-top: 2px solid #333;
+    }
+    .teacher-name {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-top: 10px;
+    }
+    
+    /* Media Query للشاشات الصغيرة */
+    @media screen and (max-width: 600px) {
+      body {
+        margin-top: 20px;
+        padding: 5px;
+        font-size: 16px;
+      }
+      
+      input, button {
+        width: 95%;
+        font-size: 16px;
+        padding: 14px;
+        margin: 8px 0;
+      }
+      
+      h2 {
+        font-size: 22px;
+        padding: 0 10px;
+      }
+      
+      .results-table th, .results-table td {
+        padding: 10px 8px;
+        font-size: 16px;
+      }
+      
+      .print-table {
+        font-size: 16px;
+      }
+      
+      .print-table th, .print-table td {
+        padding: 8px 5px;
+      }
+    }
+    
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .print-section, .print-section * {
+        visibility: visible;
+      }
+      .print-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+      button {
+        display: none;
+      }
+      h2 {
+        display: none;
+      }
+      input {
+        display: none;
+      }
+      #result {
+        display: none;
+      }
+      .note {
+        background-color: #fff3cd !important;
+        border: 1px solid #ffeaa7 !important;
+        color: #856404 !important;
+        padding: 15px !important;
+        margin: 20px auto !important;
+        font-size: 16px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>درجات الطالب في مادة اللغة العربية </h2>
+  <h2>ادخل الكود الخاص بك </h2>
+  <input type="text" id="studentId" placeholder="رقم الطالب (مثل: 1)" onkeypress="if(event.key==='Enter') checkResult()">
+  <br>
+  <button onclick="loadData()">🔄 تحديث البيانات</button>
+  <button onclick="checkResult()">عرض النتائج</button>
+  <button onclick="printTable()" id="printBtn" style="display:none;">🖨️ طباعة النتائج</button>
+  <div id="result"></div>
+  
+  <!-- قسم الطباعة المخفي -->
+  <div class="print-section" id="printSection" style="display:none;"></div>
+
+  <script>
+    let results = {};
+    let currentStudentData = null;
+    let isLoading = false;
+
+    // استبدل هذا الرابط برابط Google Sheet الخاص بك
+    const GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1ZbtogZn9lGGNH6cPr0htT1iTGWEkDXpQY2K-15gLa7A/gviz/tq?tqx=out:json";
+
+    // تحميل البيانات من Google Sheets
+    async function loadData() {
+      if (isLoading) return;
+      
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = '<div class="result-item loading">جاري تحميل البيانات...</div>';
+      isLoading = true;
+
+      try {
+        const response = await fetch(GOOGLE_SHEET_URL);
+        const text = await response.text();
+        
+        // تنظيف البيانات من النص الزائد
+        const jsonData = text.replace('/*O_o*/', '').replace('google.visualization.Query.setResponse(', '').replace(');', '');
+        const data = JSON.parse(jsonData);
+        
+        // تحويل البيانات إلى كائن
+        results = {};
+        const rows = data.table.rows;
+        
+        for (let i = 0; i < rows.length; i++) {
+          const row = rows[i].c;
+          const studentId = row[0].v.toString();
+          
+          results[studentId] = {
+            oral: row[1].v,
+            homework: row[2].v,
+            listening: row[3].v,
+            exam1: row[4].v,
+            exam2: row[5].v,
+            writing: row[6].v,
+            total: row[7].v,
+            final: row[8].v
+          };
+        }
+        
+        resultDiv.innerHTML = '<div class="result-item" style="color:green;">✅ تم تحديث البيانات بنجاح!</div>';
+        setTimeout(() => {
+          resultDiv.innerHTML = '';
+        }, 3000);
+        
+      } catch (error) {
+        console.error('خطأ في تحميل البيانات:', error);
+        resultDiv.innerHTML = '<div class="result-item error">❌ حدث خطأ في تحميل البيانات</div>';
+      } finally {
+        isLoading = false;
+      }
+    }
+
+    // دالة لحساب مستوى الطالب
+    function getStudentLevel(score) {
+      if (score >= 90) return "ممتاز (A)";
+      if (score >= 80) return "جيد جدا (B)";
+      if (score >= 65) return "جيد (C)";
+      if (score >= 50) return "مقبول (D)";
+      return "يحتاج إلى مساعدة/راسب (F)";
+    }
+
+    function checkResult() {
+      const id = document.getElementById("studentId").value.trim();
+      const resultDiv = document.getElementById("result");
+      const printBtn = document.getElementById("printBtn");
+
+      if (!id) {
+        resultDiv.innerHTML = '<div class="result-item error">يرجى إدخال رقم الطالب.</div>';
+        printBtn.style.display = "none";
+        return;
+      }
+
+      if (results[id]) {
+        currentStudentData = results[id];
+        const student = results[id];
+        // حساب المجموع الكلي
+        const grandTotal = (parseFloat(student.total) || 0) + (parseFloat(student.final) || 0);
+        // حساب مستوى الطالب
+        const level = getStudentLevel(grandTotal);
+        
+        // إنشاء جدول النتائج بترتيب جديد
+        let tableHTML = `
+          <table class="results-table">
+            <tr>
+              <th>نوع التقييم</th>
+              <th>الدرجة الكاملة</th>
+              <th>درجة الطالب</th>
+            </tr>
+            <tr>
+              <td>العرض الشفوي</td>
+              <td>10</td>
+              <td>${student.oral || 'غير متوفر'}</td>
+            </tr>
+            <tr>
+              <td>الواجب المنزلي</td>
+              <td>5</td>
+              <td>${student.homework || 'غير متوفر'}</td>
+            </tr>
+            <tr>
+              <td>التسميع</td>
+              <td>5</td>
+              <td>${student.listening || 'غير متوفر'}</td>
+            </tr>
+            <tr>
+              <td>الاختبار القصير الأول</td>
+              <td>15</td>
+              <td>${student.exam1 || 'غير متوفر'}</td>
+            </tr>
+            <tr>
+              <td>الاختبار القصير الثاني</td>
+              <td>15</td>
+              <td>${student.exam2 || 'غير متوفر'}</td>
+            </tr>
+            <tr>
+              <td>التعبير الكتابي</td>
+              <td>10</td>
+              <td>${student.writing || 'غير متوفر'}</td>
+            </tr>
+            <tr class="max-score">
+              <td>مجموع أعمال الطلاب</td>
+              <td>60</td>
+              <td>${student.total}</td>
+            </tr>
+            <tr class="final-row">
+              <td>درجة الاختبار النهائي</td>
+              <td>40</td>
+              <td>${student.final}</td>
+            </tr>
+            <tr class="grand-total-row">
+              <td>المجموع الكلي</td>
+              <td>100</td>
+              <td>${grandTotal}</td>
+            </tr>
+            <tr class="level-row">
+              <td>مستوى الطالب</td>
+              <td colspan="2">${level}</td>
+            </tr>
+          </table>
+          <div class="note">
+            <strong>ملاحظة:</strong> عبارة "غير متوفر" تعني أن الطالب لم يُقيم إلى الآن في هذه المهارة
+          </div>
+          <div style="text-align: left; margin-top: 15px; font-weight: bold; color: #333;">
+            الأستاذ خليل البلوشي
+          </div>
+        `;
+        
+        resultDiv.innerHTML = tableHTML;
+        printBtn.style.display = "inline-block";
+      } else {
+        resultDiv.innerHTML = '<div class="result-item error">عذراً، الرقم غير موجود.</div>';
+        printBtn.style.display = "none";
+      }
+    }
+
+    function printTable() {
+      if (!currentStudentData) return;
+      
+      const student = currentStudentData;
+      const printSection = document.getElementById("printSection");
+      
+      // حساب المجموع الكلي
+      const grandTotal = (parseFloat(student.total) || 0) + (parseFloat(student.final) || 0);
+      // حساب مستوى الطالب
+      const level = getStudentLevel(grandTotal);
+      
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('ar-SA');
+      const timeStr = now.toLocaleTimeString('ar-SA');
+      
+      printSection.innerHTML = `
+        <div style="text-align:center; margin-bottom:20px;">
+          <h2>نتائج الطالب</h2>
+          <p>تاريخ الطباعة: ${dateStr} - الوقت: ${timeStr}</p>
+        </div>
+        <table class="print-table">
+          <thead>
+            <tr>
+              <th>نوع التقييم</th>
+              <th>الدرجة الكاملة</th>
+              <th>درجة الطالب</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>العرض الشفوي</td>
+              <td>10</td>
+              <td>${student.oral || 'غير متوفر'}</td>
+            </tr>
+            <tr>
+              <td>الواجب المنزلي</td>
+              <td>5</td>
+              <td>${student.homework || 'غير متوفر'}</td>
+            </tr>
+            <tr>
+              <td>التسميع</td>
+              <td>5</td>
+              <td>${student.listening || 'غير متوفر'}</td>
+            </tr>
+            <tr>
+              <td>الاختبار القصير الأول</td>
+              <td>15</td>
+              <td>${student.exam1 || 'غير متوفر'}</td>
+            </tr>
+            <tr>
+              <td>الاختبار القصير الثاني</td>
+              <td>15</td>
+              <td>${student.exam2 || 'غير متوفر'}</td>
+            </tr>
+            <tr>
+              <td>التعبير الكتابي</td>
+              <td>10</td>
+              <td>${student.writing || 'غير متوفر'}</td>
+            </tr>
+            <tr style="background-color:#fff8e1; font-weight:bold;">
+              <td>مجموع أعمال الطلاب</td>
+              <td>60</td>
+              <td>${student.total}</td>
+            </tr>
+            <tr style="background-color:#e3f2fd; font-weight:bold;">
+              <td>درجة الاختبار النهائي</td>
+              <td>40</td>
+              <td>${student.final}</td>
+            </tr>
+            <tr style="background-color:#f3e5f5; font-weight:bold; font-size: 20px;">
+              <td>المجموع الكلي</td>
+              <td>100</td>
+              <td>${grandTotal}</td>
+            </tr>
+            <tr style="background-color:#fce4ec; font-weight:bold; font-size: 20px;">
+              <td>مستوى الطالب</td>
+              <td colspan="2">${level}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="note" style="background-color: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; margin: 20px 0; font-size: 16px; border-radius: 5px;">
+          <strong>ملاحظة:</strong> عبارة "غير متوفر" تعني أن الطالب لم يُقيم إلى الآن في هذه المهارة
+        </div>
+        <div class="teacher-signature">
+          <div style="text-align:left; margin-top:50px;">
+            <div>التوقيع: ________________</div>
+            <div class="teacher-name">الأستاذ خليل البلوشي</div>
+          </div>
+        </div>
+      `;
+      
+      printSection.style.display = "block";
+      window.print();
+      printSection.style.display = "none";
+    }
+
+    // تحميل البيانات تلقائيًا عند فتح الصفحة
+    window.addEventListener('load', function() {
+      loadData();
+    });
+  </script>
+</body>
+</html>
