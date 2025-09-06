@@ -253,15 +253,15 @@
         const grandTotal = (parseFloat(student.total) || 0) + (parseFloat(student.final) || 0);
         
         resultDiv.innerHTML = `
-          <div class="result-item oral">العرض الشفوي: ${student.oral || 'غير متوفر'}</div>
-          <div class="result-item homework">الواجب المنزلي: ${student.homework || 'غير متوفر'}</div>
-          <div class="result-item listening">التسميع: ${student.listening || 'غير متوفر'}</div>
-          <div class="result-item exam1">الاختبار الأول: ${student.exam1 || 'غير متوفر'}</div>
-          <div class="result-item exam2">الاختبار الثاني: ${student.exam2 || 'غير متوفر'}</div>
-          <div class="result-item writing">التعبير الكتابي: ${student.writing || 'غير متوفر'}</div>
-          <div class="result-item total">المجموع النهائي لأعمال التقويم المستمر: ${student.total}</div>
-          <div class="result-item final">امتحان نهاية الفصل: ${student.final}</div>
-          <div class="result-item grandTotal">المجموع الكلي: ${grandTotal}</div>
+          <div class="result-item oral">العرض الشفوي من 10: ${student.oral || 'غير متوفر'}</div>
+          <div class="result-item homework">الواجب المنزلي من 5: ${student.homework || 'غير متوفر'}</div>
+          <div class="result-item listening">التسميع من 5: ${student.listening || 'غير متوفر'}</div>
+          <div class="result-item exam1">الاختبار الأول من 15: ${student.exam1 || 'غير متوفر'}</div>
+          <div class="result-item exam2">الاختبار الثاني من 15: ${student.exam2 || 'غير متوفر'}</div>
+          <div class="result-item writing">التعبير الكتابي من 10 : ${student.writing || 'غير متوفر'}</div>
+          <div class="result-item total">المجموع النهائي لأعمال التقويم المستمر من 60 : ${student.total}</div>
+          <div class="result-item final">امتحان نهاية الفصل من 40: ${student.final}</div>
+          <div class="result-item grandTotal">المجموع الكلي من 100: ${grandTotal}</div>
           <div class="note">
             <strong>ملاحظة:</strong> عبارة "غير متوفر" تعني أن الطالب لم يُقيم إلى الآن في هذه المهارة
           </div>
@@ -360,4 +360,5 @@
   </script>
 </body>
 </html>
+
 
