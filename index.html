@@ -4,22 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>نتائج الطلاب</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Amiri&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Reem+Kufi&display=swap');
-
     body {
-      font-family: 'Reem Kufi', 'Amiri', Tahoma, Arial, sans-serif;
+      font-family: 'Baloo Bhaijaan 2', Tahoma, Arial, sans-serif;
       text-align: center;
       margin-top: 30px;
       direction: rtl;
       padding: 10px;
       background-color: #f5f7fa;
+      font-size: 18px;
+      line-height: 1.6;
     }
     input, button {
       padding: 12px;
-      font-family: 'Reem Kufi', 'Amiri', Tahoma, Arial, sans-serif;
-      font-size: 16px;
+      font-family: 'Baloo Bhaijaan 2', Tahoma, Arial, sans-serif;
+      font-size: 18px;
       margin: 5px;
       width: 90%;
       max-width: 300px;
@@ -38,21 +38,22 @@
     }
     #result {
       margin-top: 20px;
-      font-size: 16px;
+      font-size: 18px;
       line-height: 1.6;
     }
     
     /* تنسيق الجدول النتائج */
     .results-table {
       width: 95%;
-      max-width: 600px;
+      max-width: 700px;
       margin: 20px auto;
       border-collapse: collapse;
       background-color: white;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       border-radius: 10px;
       overflow: hidden;
-      font-family: 'Reem Kufi', 'Amiri', Tahoma, Arial, sans-serif;
+      font-family: 'Baloo Bhaijaan 2', Tahoma, Arial, sans-serif;
+      font-size: 18px;
     }
     .results-table th {
       background-color: #4CAF50;
@@ -88,12 +89,12 @@
     .results-table .grand-total-row {
       background-color: #f3e5f5 !important;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 20px;
     }
     .results-table .level-row {
       background-color: #fce4ec !important;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 20px;
     }
 
     .result-item, .error, .loading {
@@ -102,7 +103,7 @@
       border-radius: 8px;
       width: 90%;
       max-width: 500px;
-      font-family: 'Reem Kufi', 'Amiri', Tahoma, Arial, sans-serif;
+      font-family: 'Baloo Bhaijaan 2', Tahoma, Arial, sans-serif;
     }
     .error {
       color: #f44336;
@@ -120,7 +121,7 @@
       padding: 15px;
       margin: 20px auto;
       max-width: 90%;
-      font-size: 14px;
+      font-size: 16px;
       color: #856404;
     }
     
@@ -129,9 +130,9 @@
       width: 100%;
       border-collapse: collapse;
       margin: 20px auto;
-      font-size: 16px;
+      font-size: 18px;
       direction: rtl;
-      font-family: 'Reem Kufi', 'Amiri', Tahoma, Arial, sans-serif;
+      font-family: 'Baloo Bhaijaan 2', Tahoma, Arial, sans-serif;
     }
     .print-table th, .print-table td {
       border: 1px solid #333;
@@ -165,6 +166,7 @@
       body {
         margin-top: 20px;
         padding: 5px;
+        font-size: 16px;
       }
       
       input, button {
@@ -175,17 +177,17 @@
       }
       
       h2 {
-        font-size: 20px;
+        font-size: 22px;
         padding: 0 10px;
       }
       
       .results-table th, .results-table td {
         padding: 10px 8px;
-        font-size: 14px;
+        font-size: 16px;
       }
       
       .print-table {
-        font-size: 14px;
+        font-size: 16px;
       }
       
       .print-table th, .print-table td {
@@ -224,7 +226,7 @@
         color: #856404 !important;
         padding: 15px !important;
         margin: 20px auto !important;
-        font-size: 14px !important;
+        font-size: 16px !important;
       }
     }
   </style>
@@ -326,58 +328,58 @@
         // حساب مستوى الطالب
         const level = getStudentLevel(grandTotal);
         
-        // إنشاء جدول النتائج
+        // إنشاء جدول النتائج بترتيب جديد
         let tableHTML = `
           <table class="results-table">
             <tr>
               <th>نوع التقييم</th>
-              <th>الدرجة</th>
               <th>الدرجة الكاملة</th>
+              <th>درجة الطالب</th>
             </tr>
             <tr>
               <td>العرض الشفوي</td>
-              <td>${student.oral || 'غير متوفر'}</td>
               <td>10</td>
+              <td>${student.oral || 'غير متوفر'}</td>
             </tr>
             <tr>
               <td>الواجب المنزلي</td>
-              <td>${student.homework || 'غير متوفر'}</td>
               <td>5</td>
+              <td>${student.homework || 'غير متوفر'}</td>
             </tr>
             <tr>
               <td>التسميع</td>
-              <td>${student.listening || 'غير متوفر'}</td>
               <td>5</td>
+              <td>${student.listening || 'غير متوفر'}</td>
             </tr>
             <tr>
               <td>الاختبار القصير الأول</td>
-              <td>${student.exam1 || 'غير متوفر'}</td>
               <td>15</td>
+              <td>${student.exam1 || 'غير متوفر'}</td>
             </tr>
             <tr>
               <td>الاختبار القصير الثاني</td>
-              <td>${student.exam2 || 'غير متوفر'}</td>
               <td>15</td>
+              <td>${student.exam2 || 'غير متوفر'}</td>
             </tr>
             <tr>
               <td>التعبير الكتابي</td>
-              <td>${student.writing || 'غير متوفر'}</td>
               <td>10</td>
+              <td>${student.writing || 'غير متوفر'}</td>
             </tr>
             <tr class="max-score">
               <td>مجموع أعمال الطلاب</td>
-              <td>${student.total}</td>
               <td>60</td>
+              <td>${student.total}</td>
             </tr>
             <tr class="final-row">
               <td>درجة الاختبار النهائي</td>
-              <td>${student.final}</td>
               <td>40</td>
+              <td>${student.final}</td>
             </tr>
             <tr class="grand-total-row">
               <td>المجموع الكلي</td>
-              <td>${grandTotal}</td>
               <td>100</td>
+              <td>${grandTotal}</td>
             </tr>
             <tr class="level-row">
               <td>مستوى الطالب</td>
@@ -421,63 +423,63 @@
           <thead>
             <tr>
               <th>نوع التقييم</th>
-              <th>الدرجة</th>
               <th>الدرجة الكاملة</th>
+              <th>درجة الطالب</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>العرض الشفوي</td>
-              <td>${student.oral || 'غير متوفر'}</td>
               <td>10</td>
+              <td>${student.oral || 'غير متوفر'}</td>
             </tr>
             <tr>
               <td>الواجب المنزلي</td>
-              <td>${student.homework || 'غير متوفر'}</td>
               <td>5</td>
+              <td>${student.homework || 'غير متوفر'}</td>
             </tr>
             <tr>
               <td>التسميع</td>
-              <td>${student.listening || 'غير متوفر'}</td>
               <td>5</td>
+              <td>${student.listening || 'غير متوفر'}</td>
             </tr>
             <tr>
               <td>الاختبار القصير الأول</td>
-              <td>${student.exam1 || 'غير متوفر'}</td>
               <td>15</td>
+              <td>${student.exam1 || 'غير متوفر'}</td>
             </tr>
             <tr>
               <td>الاختبار القصير الثاني</td>
-              <td>${student.exam2 || 'غير متوفر'}</td>
               <td>15</td>
+              <td>${student.exam2 || 'غير متوفر'}</td>
             </tr>
             <tr>
               <td>التعبير الكتابي</td>
-              <td>${student.writing || 'غير متوفر'}</td>
               <td>10</td>
+              <td>${student.writing || 'غير متوفر'}</td>
             </tr>
             <tr style="background-color:#fff8e1; font-weight:bold;">
               <td>مجموع أعمال الطلاب</td>
-              <td>${student.total}</td>
               <td>60</td>
+              <td>${student.total}</td>
             </tr>
             <tr style="background-color:#e3f2fd; font-weight:bold;">
               <td>درجة الاختبار النهائي</td>
-              <td>${student.final}</td>
               <td>40</td>
+              <td>${student.final}</td>
             </tr>
-            <tr style="background-color:#f3e5f5; font-weight:bold; font-size: 18px;">
+            <tr style="background-color:#f3e5f5; font-weight:bold; font-size: 20px;">
               <td>المجموع الكلي</td>
-              <td>${grandTotal}</td>
               <td>100</td>
+              <td>${grandTotal}</td>
             </tr>
-            <tr style="background-color:#fce4ec; font-weight:bold; font-size: 18px;">
+            <tr style="background-color:#fce4ec; font-weight:bold; font-size: 20px;">
               <td>مستوى الطالب</td>
               <td colspan="2">${level}</td>
             </tr>
           </tbody>
         </table>
-        <div class="note" style="background-color: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; margin: 20px 0; font-size: 14px; border-radius: 5px;">
+        <div class="note" style="background-color: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; margin: 20px 0; font-size: 16px; border-radius: 5px;">
           <strong>ملاحظة:</strong> عبارة "غير متوفر" تعني أن الطالب لم يُقيم إلى الآن في هذه المهارة
         </div>
         <div class="teacher-signature">
