@@ -5,50 +5,113 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>نتائج الطلاب</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Amiri&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Reem+Kufi&display=swap');
+
     body {
-      font-family: Tahoma, Arial;
+      font-family: 'Reem Kufi', 'Amiri', Tahoma, Arial, sans-serif;
       text-align: center;
       margin-top: 30px;
       direction: rtl;
       padding: 10px;
+      background-color: #f5f7fa;
     }
     input, button {
       padding: 12px;
+      font-family: 'Reem Kufi', 'Amiri', Tahoma, Arial, sans-serif;
       font-size: 16px;
       margin: 5px;
       width: 90%;
       max-width: 300px;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
     }
     #result {
       margin-top: 20px;
       font-size: 16px;
       line-height: 1.6;
     }
-    .result-item {
-      margin: 8px 0;
-      padding: 12px;
-      border-radius: 8px;
-      background-color: #f0f8ff;
+    
+    /* تنسيق الجدول النتائج */
+    .results-table {
       width: 95%;
-      max-width: 90%;
-      margin: 10px auto;
-      font-size: 15px;
+      max-width: 600px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      font-family: 'Reem Kufi', 'Amiri', Tahoma, Arial, sans-serif;
     }
-    .oral { color: #FF9800; }
-    .homework { color: #2196F3; }
-    .listening { color: #9C27B0; }
-    .exam1 { color: #4CAF50; }
-    .exam2 { color: #E91E63; }
-    .writing { color: #00BCD4; }
-    .total { color: #FF5722; }
-    .final { color: #3F51B5; }
-    .grandTotal { color: #9C27B0; font-weight: bold; }
+    .results-table th {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .results-table td {
+      padding: 12px 15px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+    .results-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .results-table tr:hover {
+      background-color: #f1f8e9;
+    }
+    .results-table .max-score {
+      background-color: #fff8e1 !important;
+      font-weight: bold;
+      color: #5d4037;
+    }
+    .results-table .total-row {
+      background-color: #e8f5e9 !important;
+      font-weight: bold;
+    }
+    .results-table .final-row {
+      background-color: #e3f2fd !important;
+      font-weight: bold;
+    }
+    .results-table .grand-total-row {
+      background-color: #f3e5f5 !important;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .results-table .level-row {
+      background-color: #fce4ec !important;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .result-item, .error, .loading {
+      margin: 10px auto;
+      padding: 15px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      font-family: 'Reem Kufi', 'Amiri', Tahoma, Arial, sans-serif;
+    }
     .error {
       color: #f44336;
       background-color: #ffebee;
+      border: 1px solid #ffcdd2;
     }
     .loading {
       color: #2196F3;
+      background-color: #e3f2fd;
     }
     .note {
       background-color: #fff3cd;
@@ -68,10 +131,11 @@
       margin: 20px auto;
       font-size: 16px;
       direction: rtl;
+      font-family: 'Reem Kufi', 'Amiri', Tahoma, Arial, sans-serif;
     }
     .print-table th, .print-table td {
       border: 1px solid #333;
-      padding: 10px;
+      padding: 12px;
       text-align: center;
     }
     .print-table th {
@@ -115,10 +179,9 @@
         padding: 0 10px;
       }
       
-      .result-item {
+      .results-table th, .results-table td {
+        padding: 10px 8px;
         font-size: 14px;
-        padding: 10px;
-        width: 95%;
       }
       
       .print-table {
@@ -167,7 +230,7 @@
   </style>
 </head>
 <body>
-  <h2>لمعرفة نتيجة التقييمات، ادخل الكود الخاص بك </h2>
+  <h2>أدخل رقمك لمعرفة نتائجك</h2>
   <input type="text" id="studentId" placeholder="رقم الطالب (مثل: 1)" onkeypress="if(event.key==='Enter') checkResult()">
   <br>
   <button onclick="loadData()">🔄 تحديث البيانات</button>
@@ -235,6 +298,15 @@
       }
     }
 
+    // دالة لحساب مستوى الطالب
+    function getStudentLevel(score) {
+      if (score >= 90) return "ممتاز (A)";
+      if (score >= 80) return "جيد جدا (B)";
+      if (score >= 65) return "جيد (C)";
+      if (score >= 50) return "مقبول (D)";
+      return "يحتاج إلى مساعدة/راسب (F)";
+    }
+
     function checkResult() {
       const id = document.getElementById("studentId").value.trim();
       const resultDiv = document.getElementById("result");
@@ -251,21 +323,73 @@
         const student = results[id];
         // حساب المجموع الكلي
         const grandTotal = (parseFloat(student.total) || 0) + (parseFloat(student.final) || 0);
+        // حساب مستوى الطالب
+        const level = getStudentLevel(grandTotal);
         
-        resultDiv.innerHTML = `
-          <div class="result-item oral">العرض الشفوي من 10: ${student.oral || 'غير متوفر'}</div>
-          <div class="result-item homework">الواجب المنزلي من 5: ${student.homework || 'غير متوفر'}</div>
-          <div class="result-item listening">التسميع من 5: ${student.listening || 'غير متوفر'}</div>
-          <div class="result-item exam1">الاختبار الأول من 15: ${student.exam1 || 'غير متوفر'}</div>
-          <div class="result-item exam2">الاختبار الثاني من 15: ${student.exam2 || 'غير متوفر'}</div>
-          <div class="result-item writing">التعبير الكتابي من 10 : ${student.writing || 'غير متوفر'}</div>
-          <div class="result-item total">المجموع النهائي لأعمال التقويم المستمر من 60 : ${student.total}</div>
-          <div class="result-item final">امتحان نهاية الفصل من 40: ${student.final}</div>
-          <div class="result-item grandTotal">المجموع الكلي من 100: ${grandTotal}</div>
+        // إنشاء جدول النتائج
+        let tableHTML = `
+          <table class="results-table">
+            <tr>
+              <th>نوع التقييم</th>
+              <th>الدرجة</th>
+              <th>الدرجة الكاملة</th>
+            </tr>
+            <tr>
+              <td>العرض الشفوي</td>
+              <td>${student.oral || 'غير متوفر'}</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>الواجب المنزلي</td>
+              <td>${student.homework || 'غير متوفر'}</td>
+              <td>5</td>
+            </tr>
+            <tr>
+              <td>التسميع</td>
+              <td>${student.listening || 'غير متوفر'}</td>
+              <td>5</td>
+            </tr>
+            <tr>
+              <td>الاختبار القصير الأول</td>
+              <td>${student.exam1 || 'غير متوفر'}</td>
+              <td>15</td>
+            </tr>
+            <tr>
+              <td>الاختبار القصير الثاني</td>
+              <td>${student.exam2 || 'غير متوفر'}</td>
+              <td>15</td>
+            </tr>
+            <tr>
+              <td>التعبير الكتابي</td>
+              <td>${student.writing || 'غير متوفر'}</td>
+              <td>10</td>
+            </tr>
+            <tr class="max-score">
+              <td>مجموع أعمال الطلاب</td>
+              <td>${student.total}</td>
+              <td>60</td>
+            </tr>
+            <tr class="final-row">
+              <td>درجة الاختبار النهائي</td>
+              <td>${student.final}</td>
+              <td>40</td>
+            </tr>
+            <tr class="grand-total-row">
+              <td>المجموع الكلي</td>
+              <td>${grandTotal}</td>
+              <td>100</td>
+            </tr>
+            <tr class="level-row">
+              <td>مستوى الطالب</td>
+              <td colspan="2">${level}</td>
+            </tr>
+          </table>
           <div class="note">
             <strong>ملاحظة:</strong> عبارة "غير متوفر" تعني أن الطالب لم يُقيم إلى الآن في هذه المهارة
           </div>
         `;
+        
+        resultDiv.innerHTML = tableHTML;
         printBtn.style.display = "inline-block";
       } else {
         resultDiv.innerHTML = '<div class="result-item error">عذراً، الرقم غير موجود.</div>';
@@ -281,6 +405,8 @@
       
       // حساب المجموع الكلي
       const grandTotal = (parseFloat(student.total) || 0) + (parseFloat(student.final) || 0);
+      // حساب مستوى الطالب
+      const level = getStudentLevel(grandTotal);
       
       const now = new Date();
       const dateStr = now.toLocaleDateString('ar-SA');
@@ -296,44 +422,58 @@
             <tr>
               <th>نوع التقييم</th>
               <th>الدرجة</th>
+              <th>الدرجة الكاملة</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>العرض الشفوي من 10</td>
+              <td>العرض الشفوي</td>
               <td>${student.oral || 'غير متوفر'}</td>
+              <td>10</td>
             </tr>
             <tr>
-              <td>الواجب المنزلي من 5</td>
+              <td>الواجب المنزلي</td>
               <td>${student.homework || 'غير متوفر'}</td>
+              <td>5</td>
             </tr>
             <tr>
-              <td>التسميع من 5</td>
+              <td>التسميع</td>
               <td>${student.listening || 'غير متوفر'}</td>
+              <td>5</td>
             </tr>
             <tr>
-              <td>الاختبار الأول منن 15</td>
+              <td>الاختبار القصير الأول</td>
               <td>${student.exam1 || 'غير متوفر'}</td>
+              <td>15</td>
             </tr>
             <tr>
-              <td>الاختبار الثاني من 15</td>
+              <td>الاختبار القصير الثاني</td>
               <td>${student.exam2 || 'غير متوفر'}</td>
+              <td>15</td>
             </tr>
             <tr>
-              <td>التعبير الكتابي من 10</td>
+              <td>التعبير الكتابي</td>
               <td>${student.writing || 'غير متوفر'}</td>
+              <td>10</td>
             </tr>
-            <tr style="background-color:#e8f5e8; font-weight:bold;">
-              <td>المجموع النهائي لأعمال التقويم المستمر من 60</td>
+            <tr style="background-color:#fff8e1; font-weight:bold;">
+              <td>مجموع أعمال الطلاب</td>
               <td>${student.total}</td>
+              <td>60</td>
             </tr>
-            <tr style="background-color:#fff3e0; font-weight:bold;">
-              <td>امتحان نهاية الفصل من 40 </td>
+            <tr style="background-color:#e3f2fd; font-weight:bold;">
+              <td>درجة الاختبار النهائي</td>
               <td>${student.final}</td>
+              <td>40</td>
             </tr>
-            <tr style="background-color:#e3f2fd; font-weight:bold; font-size: 18px;">
-              <td>المجموع الكلي من 100</td>
+            <tr style="background-color:#f3e5f5; font-weight:bold; font-size: 18px;">
+              <td>المجموع الكلي</td>
               <td>${grandTotal}</td>
+              <td>100</td>
+            </tr>
+            <tr style="background-color:#fce4ec; font-weight:bold; font-size: 18px;">
+              <td>مستوى الطالب</td>
+              <td colspan="2">${level}</td>
             </tr>
           </tbody>
         </table>
@@ -360,6 +500,3 @@
   </script>
 </body>
 </html>
-
-
-
