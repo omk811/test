@@ -284,7 +284,8 @@
             exam2: row[5].v,
             writing: row[6].v,
             // إزالة total و final من هنا لأننا سنحسبها تلقائياً
-            final: row[8].v
+            final: row[8].v,
+            readingLevel: row[9].v // إضافة عمود المستوى القرائي
           };
         }
         
@@ -339,6 +340,9 @@
         
         // حساب مستوى الطالب
         const level = getStudentLevel(grandTotal);
+        
+        // الحصول على المستوى القرائي
+        const readingLevel = student.readingLevel || 'غير محدد';
         
         // إنشاء جدول النتائج بترتيب جديد
         let tableHTML = `
@@ -398,6 +402,9 @@
               <td colspan="2">${level}</td>
             </tr>
           </table>
+          <div style="margin: 20px auto; padding: 15px; background-color: #e3f2fd; border-radius: 8px; max-width: 700px; font-weight: bold; font-size: 18px;">
+            المستوى القرائي: ${readingLevel}
+          </div>
           <div class="note">
             <strong>ملاحظة:</strong> عبارة "غير متوفر" تعني أن الطالب لم يُقيم إلى الآن في هذه المهارة
           </div>
@@ -433,6 +440,9 @@
       
       // حساب مستوى الطالب
       const level = getStudentLevel(grandTotal);
+      
+      // الحصول على المستوى القرائي
+      const readingLevel = student.readingLevel || 'غير محدد';
       
       const printSection = document.getElementById("printSection");
       const now = new Date();
@@ -504,6 +514,9 @@
             </tr>
           </tbody>
         </table>
+        <div style="margin: 20px auto; padding: 15px; background-color: #e3f2fd; border-radius: 8px; max-width: 700px; font-weight: bold; font-size: 18px; text-align: center;">
+          المستوى القرائي: ${readingLevel}
+        </div>
         <div class="note" style="background-color: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; margin: 20px 0; font-size: 16px; border-radius: 5px;">
           <strong>ملاحظة:</strong> عبارة "غير متوفر" تعني أن الطالب لم يُقيم إلى الآن في هذه المهارة
         </div>
